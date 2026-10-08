@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SkillEarn BD</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;background:#f5f7fb;color:#172033}
+header{background:#0b6b4f;color:white;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+nav button{background:none;border:0;color:white;margin:0 4px;padding:9px;border-radius:8px;cursor:pointer}
+nav button:hover{background:#ffffff22}.wrap{max-width:1100px;margin:auto;padding:24px}
+.hero{background:linear-gradient(135deg,#0b6b4f,#15966e);color:white;border-radius:20px;padding:35px;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+.card{background:white;border-radius:16px;padding:18px;box-shadow:0 4px 18px #12203312}
+.price{font-size:24px;font-weight:800;color:#0b6b4f}.btn{border:0;background:#0b6b4f;color:white;padding:10px 15px;border-radius:9px;cursor:pointer}.btn.alt{background:#e9f3ef;color:#0b6b4f}
+input,select{width:100%;padding:11px;border:1px solid #ccd5df;border-radius:8px;margin:6px 0 12px}
+.page{display:none}.page.active{display:block}.stat{font-size:28px;font-weight:800}.muted{color:#687386}
+table{width:100%;border-collapse:collapse;background:white}.tablewrap{overflow:auto}th,td{padding:11px;border-bottom:1px solid #edf0f4;text-align:left}
+footer{padding:30px;text-align:center;color:#697386}
+</style></head>
+<body>
+<header><b>SkillEarn BD</b><nav>
+<button onclick="show('home')">Home</button><button onclick="show('jobs')">Jobs</button>
+<button onclick="show('services')">Services</button><button onclick="show('wallet')">Wallet</button>
+<button onclick="show('learn')">Learn</button><button onclick="show('profile')">Profile</button>
+</nav></header>
+<main class="wrap">
+<section id="home" class="page active">
+<div class="hero"><h1>কাজ করুন, স্কিল বিক্রি করুন, আয় করুন</h1><p>বাংলাদেশের জন্য তৈরি freelancer + micro-job marketplace.</p><button class="btn" onclick="show('jobs')">কাজ খুঁজুন</button></div>
+<div class="grid"><div class="card"><div class="stat">৳1,250</div><div class="muted">Demo wallet</div></div><div class="card"><div class="stat">10%</div><div class="muted">Platform commission</div></div><div class="card"><div class="stat">24/7</div><div class="muted">Marketplace access</div></div></div>
+<h2>শুরু করার ৩ ধাপ</h2><div class="grid"><div class="card"><b>১. Profile</b><p>নিজের skill ও payment info সেট করুন।</p></div><div class="card"><b>২. কাজ নিন</b><p>Job বা service বেছে নিন।</p></div><div class="card"><b>৩. Payment</b><p>Order complete হলে wallet ledger-এ earnings যোগ হবে।</p></div></div>
+</section>
+
+<section id="jobs" class="page"><h2>Available Jobs</h2><div id="jobgrid" class="grid"></div></section>
+<section id="services" class="page"><h2>Sell Your Service</h2>
+<div class="card"><label>Service title</label><input id="st" placeholder="যেমন: Facebook পোস্ট লিখে দেব"><label>Price (BDT)</label><input id="sp" type="number" value="300"><label>Description</label><input id="sd" placeholder="কী deliver করবেন?"><button class="btn" onclick="publishService()">Publish Service</button></div>
+<div id="servicegrid" class="grid" style="margin-top:15px"></div></section>
+
+<section id="wallet" class="page"><h2>Wallet & Withdrawal</h2><div class="card"><h3>Available balance</h3><div class="price">৳<span id="bal">1250</span></div><hr>
+<h3>Withdrawal request</h3><select id="method"><option>bKash</option><option>Nagad</option><option>Bank</option></select><input id="acct" placeholder="Account / mobile number"><input id="amt" type="number" placeholder="Amount"><button class="btn" onclick="withdraw()">Request withdrawal</button><p class="muted">Demo mode: real payout requires approved payment/merchant integration.</p></div>
+<h3>Ledger</h3><div class="tablewrap"><table><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead><tbody id="ledger"></tbody></table></div></section>
+
+<section id="learn" class="page"><h2>Learning</h2><div class="grid"><div class="card"><h3>Canva Design</h3><p>Social media poster basics.</p><button class="btn">Start</button></div><div class="card"><h3>Content Writing</h3><p>বাংলা content writing শুরু করুন।</p><button class="btn">Start</button></div><div class="card"><h3>AI Automation</h3><p>AI দিয়ে repetitive কাজ automate করার ধারণা।</p><button class="btn">Start</button></div></div></section>
+
+<section id="profile" class="page"><h2>Profile</h2><div class="card"><label>Name</label><input id="pn" value="SkillEarn User"><label>Role</label><select id="role"><option>Seller</option><option>Buyer</option></select><label>Skills</label><input id="skills" placeholder="Canva, Writing, Data Entry"><button class="btn" onclick="saveProfile()">Save profile</button><p id="saved"></p></div></section>
+
+<section id="admin" class="page"><h2>Admin Control Center</h2><div class="grid"><div class="card"><div class="stat">1,248</div>Users</div><div class="card"><div class="stat">382</div>Orders</div><div class="card"><div class="stat">৳48,600</div>Commission</div></div>
+<div class="card" style="margin-top:15px"><h3>Security checklist</h3><ul><li>Admin authentication</li><li>KYC/seller verification</li><li>Order dispute workflow</li><li>Audit log</li><li>Rate limiting / anti-fraud</li></ul></div></section>
+</main><footer>SkillEarn BD • Marketplace prototype • Secure production integrations required</footer>
+<script>
+let balance=1250, ledgerData=[['2026-10-08','Job earning','+৳270','Completed'],['2026-10-08','Job earning','+৳450','Completed'],['2026-10-08','Withdrawal','-৳300','Demo']];
+const jobs=[
+['Data Entry','Excel/Google Sheets data entry','250'],
+['বাংলা Content Writing','Facebook/blog বাংলা লেখা','300'],
+['Canva Poster','Social media poster design','500'],
+['Product Description','E-commerce product copy','450'],
+['Video Caption','Short video subtitle/caption','350'],
+['Virtual Assistant','Simple online support task','400']];
+let services=[['Facebook Post Writing','৳300'],['Canva Design','৳500']];
+function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function renderJobs(){jobgrid.innerHTML=jobs.map((j,i)=>`<div class="card"><h3>${j[0]}</h3><p>${j[1]}</p><div class="price">৳${j[2]}</div><button class="btn" onclick="acceptJob(${i})">Accept Job</button></div>`).join('')}
+function acceptJob(i){let gross=+jobs[i][2], earn=Math.round(gross*.9);balance+=earn;ledgerData.unshift([new Date().toISOString().slice(0,10),'Job earning','+৳'+earn,'Completed']);render();}
+function publishService(){let t=st.value||'New Service',p=sp.value||300;services.unshift([t,'৳'+p]);renderServices();alert('Service published in demo mode.')}
+function renderServices(){servicegrid.innerHTML=services.map(s=>`<div class="card"><h3>${s[0]}</h3><div class="price">${s[1]}</div><button class="btn alt">View</button></div>`).join('')}
+function withdraw(){let a=+amt.value;if(!a||a>balance){alert('Invalid amount');return}balance-=a;ledgerData.unshift([new Date().toISOString().slice(0,10),'Withdrawal','-৳'+a,'Pending']);render();alert('Withdrawal request created (demo).')}
+function saveProfile(){saved.textContent='Profile saved locally (demo).';}
+function render(){bal.textContent=balance.toFixed(0);ledger.innerHTML=ledgerData.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td><td>${x[3]}</td></tr>`).join('')}
+renderJobs();renderServices();render();
+</script></body></html>
